@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnNoteListener {
 
     private static final String TAG = "MainActivity";
 
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         mNames.add("White Sands Desert");
 
         mImageUrls.add("https://i.redd.it/obx4zydshg601.jpg");
-        mNames.add("Austrailia");
+        mNames.add("Australia");
 
         mImageUrls.add("https://peakvisor.com/img/news/Rainier.jpg");
         mNames.add("Washington");
@@ -67,9 +69,21 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "initRecyclerView: initRecylerView");
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mNames, mImageUrls, this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+    }
+
+    @Override
+    public void onNoteClick(int position) {
+        Log.d(TAG, "onClick: clicked on: " + mNames.get(position));
+
+        Toast.makeText(this, mNames.get(position), Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, GalleryActivity.class);
+        intent.putExtra("image_url", mImageUrls.get(position));
+        intent.putExtra("image_name", mNames.get(position));
+        getApplication().startActivity(intent);
     }
 }
